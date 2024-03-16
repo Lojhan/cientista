@@ -1,0 +1,31 @@
+{
+  "name": "cientista",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "jest",
+    "start": "node --loader ts-node/esm index.ts",
+    "examples": "node --loader ts-node/esm examples/index.ts",
+    "build": "tsc"
+  },
+  "keywords": [
+    "cientista",
+    "scientist",
+    "science"
+  ],
+  "author": "lojhan",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/esprima": "^4.0.6",
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.2"
+  },
+  "dependencies": {
+    "esprima": "^4.0.1"
+  }
+}
