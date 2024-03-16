@@ -2,12 +2,12 @@ import { wait } from "../src/helpers.ts";
 import { Cientista } from "../src/lib/Cientista.ts";
 
 const asyncBase = async () => {
-  await wait(100);
+  await wait(1);
   return 3;
 }
 
 const cientista = new Cientista(asyncBase, "Migration from async to sync");
-cientista.withTest('willError', () => wait(100).then(() => 2));
+cientista.withTest('willError', () => wait(1).then(() => 2));
 cientista.withSyncTest('syncTest', () => 3);
 
 (async () => {

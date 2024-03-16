@@ -2,11 +2,11 @@ import { wait, waitFor } from "../helpers.ts";
 import { Cientista } from "../lib/Cientista.ts";
 
 describe('Cientista Async', () => {
-  const base = (a: number, b: number) => wait(100).then(() => a + b);
-  const test1 = (a: number, b: number) => wait(100).then(() => a - b);
-  const test2 = (a: number, b: number) => wait(100).then(() => a * b);
-  const test3 = (a: number, b: number) => wait(100).then(() => a / b);
-  const test4 = (a: number, b: number) => wait(100).then(() => a + b);
+  const base = (a: number, b: number) => wait(1).then(() => a + b);
+  const test1 = (a: number, b: number) => wait(1).then(() => a - b);
+  const test2 = (a: number, b: number) => wait(1).then(() => a * b);
+  const test3 = (a: number, b: number) => wait(1).then(() => a / b);
+  const test4 = (a: number, b: number) => wait(1).then(() => a + b);
   const test5 = (_: number, __: number) => { throw new Error('test5 error') };
 
   function createCientista() {
