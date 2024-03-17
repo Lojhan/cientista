@@ -6,6 +6,7 @@
   },
   "description": "Cientista is a versatile library designed to facilitate the smooth update of critical software paths.",
   "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/esprima": "^4.0.6",
     "@types/jest": "^29.5.12",
@@ -44,10 +45,11 @@
   "scripts": {
     "build": "rollup -c",
     "examples": "node --loader ts-node/esm examples/index.ts",
+    "format": "prettier --write .",
     "start": "node --loader ts-node/esm index.ts",
     "test": "jest"
   },
   "type": "module",
   "types": "build/index.d.ts",
-  "version": "0.0.4"
+  "version": "0.0.5"
 }

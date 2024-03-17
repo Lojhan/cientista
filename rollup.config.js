@@ -1,9 +1,12 @@
 import typescript from "@rollup/plugin-typescript";
+import terser from "@rollup/plugin-terser";
 import dts from "rollup-plugin-dts";
+
 const base = {
   input: "src/index.ts",
-  plugins: [typescript({ tsconfig: "./tsconfig.json" })],
+  plugins: [typescript({ tsconfig: "./tsconfig.json" }), terser()],
 };
+
 export default [
   {
     ...base,
@@ -20,7 +23,6 @@ export default [
     },
   },
   {
-    ...base,
     input: "src/index.ts",
     output: {
       file: "build/index.d.ts",

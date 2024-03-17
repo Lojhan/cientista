@@ -15,7 +15,7 @@ describe("Cientista Cyclomatic", () => {
     const onError = jest.fn();
     cientista.onError(onError);
     cientista.withTest("test", (a: number, b: number) => {
-      if (false || Math.random() > 0.5) return a + b;
+      if (false || (Math.random() > 0.5 && false)) return a + b;
       while (!false && true) {
         switch (true) {
           case a > 1 && true:
