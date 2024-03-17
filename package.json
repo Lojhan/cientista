@@ -1,5 +1,9 @@
 {
-  "name": "cientista",
+  "name": "@lojhan/cientista",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lojhan/cientista"
+  },
   "version": "0.0.1",
   "description": "Cientista is a versatile library designed to facilitate the smooth update of critical software paths.",
   "main": "./build/cjs/index.js",
