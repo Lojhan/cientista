@@ -1,12 +1,9 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ES2022", /* Specify what module code is generated. */
-    "rootDirs": [
-      "./examples",
-      "./src",
-      "./test"
-    ],
+    "module": "ES2022",
+    "rootDirs": ["src", "test", "examples"],
+    "downlevelIteration": true,
     "esModuleInterop": true, /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
     "forceConsistentCasingInFileNames": true, /* Ensure that casing is correct in imports. */
     "strict": true, /* Enable all strict type-checking options. */
@@ -27,5 +24,8 @@
     "noImplicitOverride": true, /* Ensure overriding members in derived classes are marked with an override modifier. */
     "noPropertyAccessFromIndexSignature": true, /* Enforces using indexed accessors for keys declared using an indexed type. */
     "skipLibCheck": true
-  }
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }

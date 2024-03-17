@@ -197,17 +197,17 @@ export class Cientista<TResult, TParams extends Array<any>> {
     key: string,
     result: TResult,
     experimentName?: string
-  ) => void = () => {};
+  ) => void = () => { };
   private onExceptionCallback: (
     key: string,
     error: unknown,
     experimentName?: string
-  ) => void = () => {};
+  ) => void = () => { };
   private onSuccessCallback: (
     key: string,
     result: TResult,
     experimentName?: string
-  ) => void = () => {};
+  ) => void = () => { };
 
   /**
    * Runs the base function and all registered tests.
@@ -219,7 +219,7 @@ export class Cientista<TResult, TParams extends Array<any>> {
       this.log(`Ignoring all tests for experiment: ${this.experimentName}`);
       return this.base(...args);
     }
-  
+
     this.log(`Running experiment: ${this.experimentName}`);
     this.log(`Running base function with args: ${args}`);
     this.isBusy = true;
@@ -254,21 +254,22 @@ export class Cientista<TResult, TParams extends Array<any>> {
       }
 
       const complexity = checkCyclomaticComplexity(test);
-
       const increasedComplexity = complexity > baseCyclomaticComplexity;
-      if (increasedComplexity) {
-        this.log(
-          `Test: ${key} has increased cyclomatic complexity: ${complexity}`
-        );
-      }
 
-      try {
+      const runTest = async () => {
         this.log(`Running test: ${key} with args: ${args}`);
-        const test = this.tests.get(key);
         const { time, result } = await executeWithPerformance<TResult>(
-          async () => await test!(...args)
+          async () => await test(...args)
         );
+        return { time, result };
+      };
 
+      const handleError = (error: unknown) => {
+        this.log(`Test: ${key} threw an exception: ${error}`);
+        this.onExceptionCallback(key, error, this.experimentName);
+      };
+
+      const handleSuccess = (time: number, result: TResult) => {
         const decreasedPerformance = time > basePerformance;
         if (decreasedPerformance) {
           this.log(`Test: ${key} has decreased performance: ${time}`);
@@ -279,24 +280,12 @@ export class Cientista<TResult, TParams extends Array<any>> {
         if (this.options.failOnDecreasedPerformance && decreasedPerformance) {
           this.log(`Test: ${key} failed with decreased performance: ${time}`);
           this.onErrorCallback(key, result, this.experimentName);
-          continue;
-        }
-
-        if (
-          this.options.failOnIncreasedCyclomaticComplexity &&
-          increasedComplexity
-        ) {
-          this.log(
-            `Test: ${key} failed with increased cyclomatic complexity: ${complexity}`
-          );
+        } else if (this.options.failOnIncreasedCyclomaticComplexity && increasedComplexity) {
+          this.log(`Test: ${key} failed with increased cyclomatic complexity: ${complexity}`);
           this.onErrorCallback(key, result, this.experimentName);
-          continue;
-        }
-
-        const validationMethod = this.validationMethods.get(key);
-        if (validationMethod) {
-          this.log(`Running validation method for test: ${key}`);
-          const validationResult = validationMethod({
+        } else {
+          const validationMethod = this.validationMethods.get(key);
+          if (validationMethod && !validationMethod({
             result,
             testName: key,
             experimentName: this.experimentName,
@@ -304,28 +293,27 @@ export class Cientista<TResult, TParams extends Array<any>> {
             cyclomaticComplexity: complexity,
             baseCyclomaticComplexity,
             basePerformance,
-          });
-
-          if (!validationResult) {
+          })) {
             this.log(`Test: ${key} failed validation`);
             this.onErrorCallback(key, result, this.experimentName);
-            continue;
+          } else if (result !== baseResult) {
+            this.log(`Test: ${key} failed with result: ${result}`);
+            this.onErrorCallback(key, result, this.experimentName);
+          } else {
+            this.log(`Test: ${key} succeeded with result: ${result}`);
+            this.onSuccessCallback(key, result, this.experimentName);
           }
         }
+      };
 
-        if (result !== baseResult) {
-          this.log(`Test: ${key} failed with result: ${result}`);
-          this.onErrorCallback(key, result, this.experimentName);
-        } else {
-          this.log(`Test: ${key} succeeded with result: ${result}`);
-          this.onSuccessCallback(key, result, this.experimentName);
-        }
-      } catch (error: unknown) {
-        this.log(`Test: ${key} threw an exception: ${error}`);
-        this.onExceptionCallback(key, error, this.experimentName);
+      try {
+        const { time, result } = await runTest();
+        handleSuccess(time, result);
+      } catch (error) {
+        handleError(error);
       } finally {
-        const clenup = this.cleanupMethods.get(key);
-        if (clenup) clenup();
+        const cleanup = this.cleanupMethods.get(key);
+        if (cleanup) cleanup();
       }
     }
 
