@@ -1,4 +1,4 @@
-import * as esprima from 'esprima';
+import * as esprima from "esprima";
 
 export function checkCyclomaticComplexity(func: Function) {
   let complexity = 1;
@@ -7,18 +7,18 @@ export function checkCyclomaticComplexity(func: Function) {
     if (!node) return;
 
     switch (node.type) {
-      case 'IfStatement':
-      case 'ConditionalExpression':
-      case 'ForStatement':
-      case 'ForInStatement':
-      case 'ForOfStatement':
-      case 'WhileStatement':
-      case 'DoWhileStatement':
-      case 'SwitchStatement':
+      case "IfStatement":
+      case "ConditionalExpression":
+      case "ForStatement":
+      case "ForInStatement":
+      case "ForOfStatement":
+      case "WhileStatement":
+      case "DoWhileStatement":
+      case "SwitchStatement":
         complexity++;
         break;
-      case 'BinaryExpression':
-        if (node.operator === '&&' || node.operator === '||') {
+      case "BinaryExpression":
+        if (node.operator === "&&" || node.operator === "||") {
           complexity++;
         }
         break;
@@ -26,7 +26,7 @@ export function checkCyclomaticComplexity(func: Function) {
 
     // Recursively visit child nodes
     for (const key in node) {
-      if (node.hasOwnProperty(key) && typeof node[key] === 'object') {
+      if (node.hasOwnProperty(key) && typeof node[key] === "object") {
         visitNode(node[key]);
       }
     }

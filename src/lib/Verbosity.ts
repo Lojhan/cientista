@@ -1,5 +1,4 @@
-
 export enum Verbosity {
   Silent,
-  Verbose
+  Verbose,
 }

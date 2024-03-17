@@ -8,6 +8,8 @@ describe("waitFor", () => {
 
   it("should reject if the condition is not met", async () => {
     const condition = () => expect(true).toBe(false);
-    await expect(() => waitFor(condition)).rejects.toThrow('Timed out in waitFor.');
+    await expect(() => waitFor(condition)).rejects.toThrow(
+      "Timed out in waitFor.",
+    );
   });
-})
+});

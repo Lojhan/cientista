@@ -64,62 +64,62 @@ await cientista.run(10);
 To skip test, you can use the `skipTests` method:
 
 ```javascript
-    const cientista = new Cientista(fibonacciBase, "Fibonacci");
+const cientista = new Cientista(fibonacciBase, "Fibonacci");
 
-    // Skip all tests based on a condition
-    cientista.skipTests(() => true); 
+// Skip all tests based on a condition
+cientista.skipTests(() => true);
 
-    // Skip all tests that match a specific regular expression
-    cientista.skipTests(/test/); 
+// Skip all tests that match a specific regular expression
+cientista.skipTests(/test/);
 
-    // Skip all tests based in the array of test names
-    cientista.skipTests(['test']); 
+// Skip all tests based in the array of test names
+cientista.skipTests(["test"]);
 
-    // Skip multiple tests based on different conditions
-    cientista.skipTests([
-        ['test', () => true],
-        [/otherTest/, () => true]
-    ]); 
+// Skip multiple tests based on different conditions
+cientista.skipTests([
+  ["test", () => true],
+  [/otherTest/, () => true],
+]);
 ```
 
 You can also execute cleanup methods after the tests are executed:
 
 ```javascript
-    const cientista = new Cientista(fibonacciBase, "Fibonacci");
+const cientista = new Cientista(fibonacciBase, "Fibonacci");
 
-    const method = () => console.log('method');
-    const cleanupMethod = () => console.log('cleanupMethod');
-    cientista.withTest('withoutRecursion', method, cleanupMethod);
+const method = () => console.log("method");
+const cleanupMethod = () => console.log("cleanupMethod");
+cientista.withTest("withoutRecursion", method, cleanupMethod);
 
-    await cientista.run(10);
+await cientista.run(10);
 ```
 
 Or
 
 ```javascript
-    const cientista = new Cientista(baseMethod, "Fibonacci");
+const cientista = new Cientista(baseMethod, "Fibonacci");
 
-    const method = () => console.log('method');
-    const cleanupMethod = () => console.log('cleanupMethod');
+const method = () => console.log("method");
+const cleanupMethod = () => console.log("cleanupMethod");
 
-    cientista.withTest('withoutRecursion', method);
-    cientista.withCleanup('withoutRecursion', cleanupMethod);
+cientista.withTest("withoutRecursion", method);
+cientista.withCleanup("withoutRecursion", cleanupMethod);
 
-    await cientista.run(10);
+await cientista.run(10);
 ```
 
 You can also add custom validation methods for your tests:
 
 ```javascript
-    const cientista = new Cientista(baseMethod, "Fibonacci");
+const cientista = new Cientista(baseMethod, "Fibonacci");
 
-    const method = () => console.log('method');
-    const cleanupMethod = () => console.log('cleanupMethod');
-    const validationMethod = (result) => result === 55;
+const method = () => console.log("method");
+const cleanupMethod = () => console.log("cleanupMethod");
+const validationMethod = (result) => result === 55;
 
-    cientista.withTest('withoutRecursion', method, cleanupMethod, validationMethod);
+cientista.withTest("withoutRecursion", method, cleanupMethod, validationMethod);
 
-    await cientista.run(10);
+await cientista.run(10);
 ```
 
 Cyclomatic complexity and performance changes can be configured using the `options` method:
@@ -152,8 +152,6 @@ You can also add custom verbosity and logging options:
 
 - [Vinícius Lojhan](https://github.com/Lojhan)
 
-
 ## Contributing
 
 Contributions are welcome! Feel free to submit a pull request or open an issue if you have any questions, suggestions, or bug reports.
-

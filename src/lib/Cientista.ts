@@ -60,7 +60,7 @@ export class Cientista<TResult, TParams extends Array<any>> {
       logger: console.log,
       failOnIncreasedCyclomaticComplexity: false,
       failOnDecreasedPerformance: false,
-    }
+    },
   ) {
     if (options.ingoreAllTests) this.skipTests(() => true);
     if (options.verbosity == undefined)
@@ -84,7 +84,7 @@ export class Cientista<TResult, TParams extends Array<any>> {
     key: string,
     test: typeof this.base,
     cleanupMethod?: () => void,
-    validationMethod?: (params: ValidationMethodParams) => boolean
+    validationMethod?: (params: ValidationMethodParams) => boolean,
   ): this {
     this.tests.set(key, test);
     if (cleanupMethod) this.withCleanupMethod(key, cleanupMethod);
@@ -104,7 +104,7 @@ export class Cientista<TResult, TParams extends Array<any>> {
     key: string,
     test: (...params: TParams) => Promise<TResult>,
     cleanupMethod?: () => void,
-    validationMethod?: (params: ValidationMethodParams) => boolean
+    validationMethod?: (params: ValidationMethodParams) => boolean,
   ): this {
     this.tests.set(key, test);
     if (cleanupMethod) this.withCleanupMethod(key, cleanupMethod);
@@ -124,7 +124,7 @@ export class Cientista<TResult, TParams extends Array<any>> {
     key: string,
     test: (...params: TParams) => Awaited<TResult>,
     cleanupMethod?: () => void,
-    validationMethod?: (params: ValidationMethodParams) => boolean
+    validationMethod?: (params: ValidationMethodParams) => boolean,
   ): this {
     this.tests.set(key, test);
     if (cleanupMethod) this.withCleanupMethod(key, cleanupMethod);
@@ -151,7 +151,7 @@ export class Cientista<TResult, TParams extends Array<any>> {
    */
   public withValidationMethod(
     key: string,
-    validationMethod: (params: ValidationMethodParams) => boolean
+    validationMethod: (params: ValidationMethodParams) => boolean,
   ): this {
     this.validationMethods.set(key, validationMethod);
     return this;
@@ -163,7 +163,7 @@ export class Cientista<TResult, TParams extends Array<any>> {
    * @returns The Cientista instance for method chaining.
    */
   public onError(
-    callback: (key: string, result: TResult, experimentName?: string) => void
+    callback: (key: string, result: TResult, experimentName?: string) => void,
   ): this {
     this.onErrorCallback = callback;
     return this;
@@ -175,7 +175,7 @@ export class Cientista<TResult, TParams extends Array<any>> {
    * @returns The Cientista instance for method chaining.
    */
   public onSuccess(
-    callback: (key: string, result: TResult, experimentName?: string) => void
+    callback: (key: string, result: TResult, experimentName?: string) => void,
   ): this {
     this.onSuccessCallback = callback;
     return this;
@@ -187,7 +187,7 @@ export class Cientista<TResult, TParams extends Array<any>> {
    * @returns The Cientista instance for method chaining.
    */
   public onException(
-    callback: (key: string, error: unknown, experimentName?: string) => void
+    callback: (key: string, error: unknown, experimentName?: string) => void,
   ): this {
     this.onExceptionCallback = callback;
     return this;
@@ -196,18 +196,18 @@ export class Cientista<TResult, TParams extends Array<any>> {
   private onErrorCallback: (
     key: string,
     result: TResult,
-    experimentName?: string
-  ) => void = () => { };
+    experimentName?: string,
+  ) => void = () => {};
   private onExceptionCallback: (
     key: string,
     error: unknown,
-    experimentName?: string
-  ) => void = () => { };
+    experimentName?: string,
+  ) => void = () => {};
   private onSuccessCallback: (
     key: string,
     result: TResult,
-    experimentName?: string
-  ) => void = () => { };
+    experimentName?: string,
+  ) => void = () => {};
 
   /**
    * Runs the base function and all registered tests.
@@ -225,10 +225,10 @@ export class Cientista<TResult, TParams extends Array<any>> {
     this.isBusy = true;
     const baseCyclomaticComplexity = checkCyclomaticComplexity(this.base);
     this.log(
-      `Base function cyclomatic complexity: ${baseCyclomaticComplexity}`
+      `Base function cyclomatic complexity: ${baseCyclomaticComplexity}`,
     );
     const { time, result } = await executeWithPerformance<TResult>(
-      async () => await this.base(...args)
+      async () => await this.base(...args),
     );
     this.log(`Base function performance in ms: ${time}`);
     await this.runTests(result, baseCyclomaticComplexity, time, ...args);
@@ -259,7 +259,7 @@ export class Cientista<TResult, TParams extends Array<any>> {
       const runTest = async () => {
         this.log(`Running test: ${key} with args: ${args}`);
         const { time, result } = await executeWithPerformance<TResult>(
-          async () => await test(...args)
+          async () => await test(...args),
         );
         return { time, result };
       };
@@ -280,20 +280,28 @@ export class Cientista<TResult, TParams extends Array<any>> {
         if (this.options.failOnDecreasedPerformance && decreasedPerformance) {
           this.log(`Test: ${key} failed with decreased performance: ${time}`);
           this.onErrorCallback(key, result, this.experimentName);
-        } else if (this.options.failOnIncreasedCyclomaticComplexity && increasedComplexity) {
-          this.log(`Test: ${key} failed with increased cyclomatic complexity: ${complexity}`);
+        } else if (
+          this.options.failOnIncreasedCyclomaticComplexity &&
+          increasedComplexity
+        ) {
+          this.log(
+            `Test: ${key} failed with increased cyclomatic complexity: ${complexity}`,
+          );
           this.onErrorCallback(key, result, this.experimentName);
         } else {
           const validationMethod = this.validationMethods.get(key);
-          if (validationMethod && !validationMethod({
-            result,
-            testName: key,
-            experimentName: this.experimentName,
-            performance: time,
-            cyclomaticComplexity: complexity,
-            baseCyclomaticComplexity,
-            basePerformance,
-          })) {
+          if (
+            validationMethod &&
+            !validationMethod({
+              result,
+              testName: key,
+              experimentName: this.experimentName,
+              performance: time,
+              cyclomaticComplexity: complexity,
+              baseCyclomaticComplexity,
+              basePerformance,
+            })
+          ) {
             this.log(`Test: ${key} failed validation`);
             this.onErrorCallback(key, result, this.experimentName);
           } else if (result !== baseResult) {
@@ -389,7 +397,7 @@ export class Cientista<TResult, TParams extends Array<any>> {
 
   private skipTestsByRegexWithCallback(
     regex: RegExp,
-    callback: () => boolean
+    callback: () => boolean,
   ): void {
     this.tests.forEach((_, key) => {
       if (regex.test(key) && callback()) this.skipTest(key);

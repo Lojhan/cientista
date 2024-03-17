@@ -1,4 +1,3 @@
-
 export async function executeWithPerformance<T>(fn: Function) {
   const start = performance.now();
   const result = await fn();
@@ -6,6 +5,6 @@ export async function executeWithPerformance<T>(fn: Function) {
 
   return {
     result: result as T,
-    time: end - start
-  }
+    time: end - start,
+  };
 }

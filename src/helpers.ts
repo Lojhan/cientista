@@ -1,16 +1,18 @@
-
 export function wait(ms: number) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
 }
 
-export function waitFor(callback: Function, options: { timeout?: number, interval?: number } = {}) {
+export function waitFor(
+  callback: Function,
+  options: { timeout?: number; interval?: number } = {},
+) {
   const { timeout = 1000, interval = 50 } = options;
   const endTime = Date.now() + timeout;
 
   const checkCondition = async () => {
-    if (Date.now() > endTime) throw new Error('Timed out in waitFor.');
+    if (Date.now() > endTime) throw new Error("Timed out in waitFor.");
 
     try {
       await callback();
@@ -29,7 +31,7 @@ export function waitFor(callback: Function, options: { timeout?: number, interva
         return reject(error);
       }
 
-      await new Promise(resolve => setTimeout(resolve, interval));
+      await new Promise((resolve) => setTimeout(resolve, interval));
     }
   });
 }

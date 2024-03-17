@@ -1,9 +1,7 @@
-
-
 import { waitFor } from "../helpers";
 import { Cientista } from "../lib/Cientista";
 
-describe('Cientista Cyclomatic', () => {
+describe("Cientista Cyclomatic", () => {
   const base = (a: number, b: number) => a + b;
 
   function createCientista() {
@@ -12,11 +10,11 @@ describe('Cientista Cyclomatic', () => {
     });
   }
 
-  it('should error on increased cyclomatic complexity', async () => {
+  it("should error on increased cyclomatic complexity", async () => {
     const cientista = createCientista();
     const onError = jest.fn();
     cientista.onError(onError);
-    cientista.withTest('test', (a: number, b: number) => {
+    cientista.withTest("test", (a: number, b: number) => {
       if (false || Math.random() > 0.5) return a + b;
       while (!false && true) {
         switch (true) {
@@ -34,7 +32,7 @@ describe('Cientista Cyclomatic', () => {
 
     await waitFor(() => {
       expect(onError).toHaveBeenCalledTimes(1);
-      expect(onError).toHaveBeenCalledWith('test', 3, 'Cientista Cyclomatic');
+      expect(onError).toHaveBeenCalledWith("test", 3, "Cientista Cyclomatic");
     });
   });
 });
