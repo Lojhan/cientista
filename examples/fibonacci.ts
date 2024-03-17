@@ -1,4 +1,4 @@
-import { Cientista } from "../src/lib/Cientista.ts";
+import { Cientista } from "../src/lib/Cientista";
 
 function fibonacciBase(n: number): number {
   if (n <= 1) return n;

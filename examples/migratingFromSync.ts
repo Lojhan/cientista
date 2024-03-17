@@ -1,5 +1,5 @@
-import { Cientista } from "../src/lib/Cientista.ts";
-import { wait } from "../src/helpers.ts";
+import { Cientista } from "../src/lib/Cientista";
+import { wait } from "../src/helpers";
 
 
 const syncBase = () => 3;

@@ -1,6 +1,6 @@
-import { Verbosity } from "./Verbosity.ts";
-import { checkCyclomaticComplexity } from "./cyclomaticComplexity.ts";
-import { executeWithPerformance } from "./performance.ts";
+import { Verbosity } from "./Verbosity";
+import { checkCyclomaticComplexity } from "./cyclomaticComplexity";
+import { executeWithPerformance } from "./performance";
 
 type SkipTestsArguments =
   | (() => boolean)

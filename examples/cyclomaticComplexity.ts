@@ -1,6 +1,6 @@
 
-import { Cientista } from "./lib/Cientista.ts";
-import { Verbosity } from "./lib/Verbosity.ts";
+import { Cientista } from "./lib/Cientista";
+import { Verbosity } from "./lib/Verbosity";
 
 const willFalse = Math.random() > 0.5;
 

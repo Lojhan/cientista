@@ -1,5 +1,5 @@
-import { wait, waitFor } from "../helpers.ts";
-import { Cientista } from "../lib/Cientista.ts";
+import { wait, waitFor } from "../helpers";
+import { Cientista } from "../lib/Cientista";
 
 describe('Cientista Performance', () => {
     const base = (a: number, b: number) => a + b;

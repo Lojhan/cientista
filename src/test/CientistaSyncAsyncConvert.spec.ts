@@ -1,5 +1,5 @@
-import { waitFor } from "../helpers.ts";
-import { Cientista } from "../lib/Cientista.ts";
+import { waitFor } from "../helpers";
+import { Cientista } from "../lib/Cientista";
 
 describe('Cientista Sync Async Convert', () => {
     describe('From Sync to Async', () => {

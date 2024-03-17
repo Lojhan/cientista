@@ -1,5 +1,5 @@
-import { wait } from "../src/helpers.ts";
-import { Cientista } from "../src/lib/Cientista.ts";
+import { wait } from "../src/helpers";
+import { Cientista } from "../src/lib/Cientista";
 
 const asyncBase = async () => {
   await wait(1);

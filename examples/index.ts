@@ -1,4 +1,4 @@
-import "./fibonacci.ts";
-import "./migratingFromSync.ts";
-import "./migratingFromAsync.ts";
-import "./cyclomaticComplexity.ts";
+import "./fibonacci";
+import "./migratingFromSync";
+import "./migratingFromAsync";
+import "./cyclomaticComplexity";
