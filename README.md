@@ -155,4 +155,5 @@ You can also add custom verbosity and logging options:
 
 ## Contributing
 
-Contributions are welcome! Please read the [contributing guide](CONTRIBUTING.md) to get started.
+Contributions are welcome! Feel free to submit a pull request or open an issue if you have any questions, suggestions, or bug reports.
+
