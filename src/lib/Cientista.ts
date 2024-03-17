@@ -84,7 +84,7 @@ export class Cientista<TResult, TParams extends Array<any>> {
     key: string,
     test: typeof this.base,
     cleanupMethod?: () => void,
-    validationMethod?: (params: ValidationMethodParams) => void
+    validationMethod?: (params: ValidationMethodParams) => boolean
   ): this {
     this.tests.set(key, test);
     if (cleanupMethod) this.withCleanupMethod(key, cleanupMethod);
@@ -104,7 +104,7 @@ export class Cientista<TResult, TParams extends Array<any>> {
     key: string,
     test: (...params: TParams) => Promise<TResult>,
     cleanupMethod?: () => void,
-    validationMethod?: (params: ValidationMethodParams) => void
+    validationMethod?: (params: ValidationMethodParams) => boolean
   ): this {
     this.tests.set(key, test);
     if (cleanupMethod) this.withCleanupMethod(key, cleanupMethod);
@@ -124,7 +124,7 @@ export class Cientista<TResult, TParams extends Array<any>> {
     key: string,
     test: (...params: TParams) => Awaited<TResult>,
     cleanupMethod?: () => void,
-    validationMethod?: (params: ValidationMethodParams) => void
+    validationMethod?: (params: ValidationMethodParams) => boolean
   ): this {
     this.tests.set(key, test);
     if (cleanupMethod) this.withCleanupMethod(key, cleanupMethod);
@@ -151,7 +151,7 @@ export class Cientista<TResult, TParams extends Array<any>> {
    */
   public withValidationMethod(
     key: string,
-    validationMethod: (params: ValidationMethodParams) => void
+    validationMethod: (params: ValidationMethodParams) => boolean
   ): this {
     this.validationMethods.set(key, validationMethod);
     return this;
@@ -215,6 +215,11 @@ export class Cientista<TResult, TParams extends Array<any>> {
    * @returns A promise that resolves with the result of the base function or undefined.
    */
   async run(...args: TParams): Promise<TResult | undefined> {
+    if (this.options.ingoreAllTests) {
+      this.log(`Ignoring all tests for experiment: ${this.experimentName}`);
+      return this.base(...args);
+    }
+  
     this.log(`Running experiment: ${this.experimentName}`);
     this.log(`Running base function with args: ${args}`);
     this.isBusy = true;
@@ -291,7 +296,7 @@ export class Cientista<TResult, TParams extends Array<any>> {
         const validationMethod = this.validationMethods.get(key);
         if (validationMethod) {
           this.log(`Running validation method for test: ${key}`);
-          validationMethod({
+          const validationResult = validationMethod({
             result,
             testName: key,
             experimentName: this.experimentName,
@@ -300,6 +305,12 @@ export class Cientista<TResult, TParams extends Array<any>> {
             baseCyclomaticComplexity,
             basePerformance,
           });
+
+          if (!validationResult) {
+            this.log(`Test: ${key} failed validation`);
+            this.onErrorCallback(key, result, this.experimentName);
+            continue;
+          }
         }
 
         if (result !== baseResult) {

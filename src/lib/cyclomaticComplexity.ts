@@ -37,7 +37,3 @@ export function checkCyclomaticComplexity(func: Function) {
   visitNode(ast);
   return complexity;
 }
-
-export function compareCyclomaticComplexity(a: number, b: number) {
-  return a - b;
-}
