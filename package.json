@@ -4,11 +4,11 @@
     "type": "git",
     "url": "git+https://github.com/Lojhan/cientista.git"
   },
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "Cientista is a versatile library designed to facilitate the smooth update of critical software paths.",
-  "main": "./build/cjs/index.js",
-  "module": "./build/esm/index.js",
-  "types": "./build/index.d.ts",
+  "main": "build/cjs/index.js",
+  "module": "build/esm/index.js",
+  "types": "build/index.d.ts",
   "type": "module",
   "exports": {
     ".": {
@@ -43,6 +43,13 @@
     "typescript": "^5.4.2"
   },
   "dependencies": {
+    "cientista": "^0.0.2",
     "esprima": "^4.0.1"
-  }
+  },
+  "files": [
+    "build",
+    "src",
+    "examples",
+    "README.md"
+  ]
 }
