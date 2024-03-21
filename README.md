@@ -125,27 +125,27 @@ await cientista.run(10);
 Cyclomatic complexity and performance changes can be configured using the `options` method:
 
 ```javascript
-    const cientista = new Cientista(baseMethod, "Fibonacci", {
-        failOnIncreasedCyclomaticComplexity: true,
-        failOnDecreasedPerformance: true,
-    });
+const cientista = new Cientista(baseMethod, "Fibonacci", {
+    failOnIncreasedCyclomaticComplexity: true,
+    failOnDecreasedPerformance: true,
+});
 
-    ...
+...
 
-    await cientista.run(10);
+await cientista.run(10);
 ```
 
 You can also add custom verbosity and logging options:
 
 ```javascript
-    const cientista = new Cientista(baseMethod, "Fibonacci", {
-        verbosity: 1, // 0 - Silent, 1 - Verbose
-        log: console.log,
-    });
+const cientista = new Cientista(baseMethod, "Fibonacci", {
+    verbosity: 1, // 0 - Silent, 1 - Verbose
+    log: console.log,
+});
 
-    ...
+...
 
-    await cientista.run(10);
+await cientista.run(10);
 ```
 
 ### Contributors
