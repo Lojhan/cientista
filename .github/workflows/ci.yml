@@ -111,16 +111,6 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Upload coverage reports
-        if: matrix.node-version == '24.x' && matrix.os == 'ubuntu-latest'
-        uses: codecov/codecov-action@v4
-        with:
-          file: ./coverage/lcov.info
-          flags: unittests
-          fail_ci_if_error: false
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
   # Code quality summary
   quality-gate:
     name: Quality Gate
