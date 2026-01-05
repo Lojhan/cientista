@@ -11,12 +11,12 @@
 
 ## Introduction
 
-Cientista is a versatile library designed to facilitate the smooth update of critical software paths. It provides a structured approach to managing and executing experiments, including synchronous, asynchronous, and promise-returning tests. With configurable options for verbosity, logging, and behavior on cyclomatic complexity and performance changes, Cientista ensures robust and reliable experimentation processes. Ideal for developers and organizations aiming to streamline their testing workflows and enhance the quality of their software through rigorous experimentation.
+Cientista is a versatile library designed to facilitate the smooth update of critical software paths. It provides a structured approach to managing and executing experiments, including synchronous, asynchronous, and promise-returning tests. With configurable options for verbosity, logging, and behavior on performance changes, Cientista ensures robust and reliable experimentation processes. Ideal for developers and organizations aiming to streamline their testing workflows and enhance the quality of their software through rigorous experimentation.
 
 ## Features
 
 - **Test Management**: Add, manage, and execute various types of tests including synchronous, asynchronous, and promise-returning tests.
-- **Configurable Options**: Customize verbosity, logging, and behavior on cyclomatic complexity and performance changes.
+- **Configurable Options**: Customize verbosity, logging, and behavior on performance changes.
 - **Error Handling**: Robust error handling with support for custom error types and continuation chains.
 - **Validation Methods**: Add custom validation methods for your tests.
 - **Cleanup Methods**: Define cleanup methods to ensure resources are properly released after tests.
@@ -118,19 +118,6 @@ const cleanupMethod = () => console.log("cleanupMethod");
 const validationMethod = (result) => result === 55;
 
 cientista.withTest("withoutRecursion", method, cleanupMethod, validationMethod);
-
-await cientista.run(10);
-```
-
-Cyclomatic complexity and performance changes can be configured using the `options` method:
-
-```javascript
-const cientista = new Cientista(baseMethod, "Fibonacci", {
-    failOnIncreasedCyclomaticComplexity: true,
-    failOnDecreasedPerformance: true,
-});
-
-...
 
 await cientista.run(10);
 ```

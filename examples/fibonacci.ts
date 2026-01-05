@@ -17,11 +17,12 @@ function fibonacciWithoutRecursion(n: number): number {
 }
 
 function fibonacciWithMemoization(n: number, memo: number[] = []): number {
-  if (memo[n] !== undefined) return memo[n]!;
+  if (memo[n] !== undefined) return memo[n];
   if (n <= 1) return n;
-  return (memo[n] =
+  memo[n] =
     fibonacciWithMemoization(n - 1, memo) +
-    fibonacciWithMemoization(n - 2, memo));
+    fibonacciWithMemoization(n - 2, memo);
+  return memo[n];
 }
 
 async function fibonacciWithGenerator(n: number) {

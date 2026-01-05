@@ -1,5 +1,4 @@
 import { Verbosity } from "./Verbosity";
-import { checkCyclomaticComplexity } from "./cyclomaticComplexity";
 import { executeWithPerformance } from "./performance";
 
 type SkipTestsArguments =
@@ -14,19 +13,15 @@ type ValidationMethodParams = {
   testName: string;
   experimentName: string;
   performance: number;
-  cyclomaticComplexity: number;
-  baseCyclomaticComplexity: number;
   basePerformance: number;
 };
 
 type CientistaOptions<TResult> = {
-  verbosity?: Verbosity;
+  verbosity?: number;
   logger?: (message: string) => void;
   performanceMeasurementFunction?: (
     fn: Function,
   ) => Promise<{ time: number; result: TResult }>;
-  complexityMeasurementFunction?: (fn: Function) => number;
-  failOnIncreasedCyclomaticComplexity?: boolean;
   failOnDecreasedPerformance?: boolean;
   ingoreAllTests?: boolean;
 };
@@ -51,10 +46,8 @@ export class Cientista<TResult, TParams extends Array<any>> {
    * @param options - Configuration options for the Cientista instance.
    * @param options.verbosity - The verbosity level for logging.
    * @param options.logger - A custom logger function.
-   * @param options.failOnIncreasedCyclomaticComplexity - Whether to fail on increased cyclomatic complexity.
    * @param options.failOnDecreasedPerformance - Whether to fail on decreased performance.
    * @param options.ingoreAllTests - Whether to ignore all tests.
-   * @param options.complexityMeasurementFunction - A custom function for measuring cyclomatic complexity.
    * @param options.performanceMeasurementFunction - A custom function for measuring performance.
    */
   constructor(
@@ -64,23 +57,17 @@ export class Cientista<TResult, TParams extends Array<any>> {
       verbosity: Verbosity.Silent,
       ingoreAllTests: false,
       logger: console.log,
-      complexityMeasurementFunction: checkCyclomaticComplexity,
       performanceMeasurementFunction: executeWithPerformance,
-      failOnIncreasedCyclomaticComplexity: false,
       failOnDecreasedPerformance: false,
     },
   ) {
     if (options.ingoreAllTests) this.skipTests(() => true);
-    if (options.verbosity == undefined)
+    if (options.verbosity === undefined)
       this.options.verbosity = Verbosity.Silent;
-    if (options.logger == undefined) this.options.logger = console.log;
-    if (options.failOnIncreasedCyclomaticComplexity == undefined)
-      this.options.failOnIncreasedCyclomaticComplexity = false;
-    if (options.failOnDecreasedPerformance == undefined)
+    if (options.logger === undefined) this.options.logger = console.log;
+    if (options.failOnDecreasedPerformance === undefined)
       this.options.failOnDecreasedPerformance = false;
-    if (options.complexityMeasurementFunction == undefined)
-      this.options.complexityMeasurementFunction = checkCyclomaticComplexity;
-    if (options.performanceMeasurementFunction == undefined)
+    if (options.performanceMeasurementFunction === undefined)
       this.options.performanceMeasurementFunction = executeWithPerformance;
   }
 
@@ -235,16 +222,12 @@ export class Cientista<TResult, TParams extends Array<any>> {
     this.log(`Running experiment: ${this.experimentName}`);
     this.log(`Running base function with args: ${args}`);
     this.isBusy = true;
-    const baseCyclomaticComplexity = this.options
-      .complexityMeasurementFunction!(this.base);
-    this.log(
-      `Base function cyclomatic complexity: ${baseCyclomaticComplexity}`,
-    );
+
     const { time, result } = await this.options.performanceMeasurementFunction!(
       async () => await this.base(...args),
     );
     this.log(`Base function performance in ms: ${time}`);
-    await this.runTests(result, baseCyclomaticComplexity, time, ...args);
+    await this.runTests(result, time, ...args);
     return result;
   }
 
@@ -256,7 +239,6 @@ export class Cientista<TResult, TParams extends Array<any>> {
    */
   private async runTests(
     baseResult: TResult,
-    baseCyclomaticComplexity: number,
     basePerformance: number,
     ...args: TParams
   ): Promise<void> {
@@ -265,9 +247,6 @@ export class Cientista<TResult, TParams extends Array<any>> {
         this.log(`Skipping test: ${key}`);
         continue;
       }
-
-      const complexity = this.options.complexityMeasurementFunction!(test);
-      const increasedComplexity = complexity > baseCyclomaticComplexity;
 
       const runTest = async () => {
         this.log(`Running test: ${key} with args: ${args}`);
@@ -292,14 +271,6 @@ export class Cientista<TResult, TParams extends Array<any>> {
         if (this.options.failOnDecreasedPerformance && decreasedPerformance) {
           this.log(`Test: ${key} failed with decreased performance: ${time}`);
           this.onErrorCallback(key, result, this.experimentName);
-        } else if (
-          this.options.failOnIncreasedCyclomaticComplexity &&
-          increasedComplexity
-        ) {
-          this.log(
-            `Test: ${key} failed with increased cyclomatic complexity: ${complexity}`,
-          );
-          this.onErrorCallback(key, result, this.experimentName);
         } else {
           const validationMethod = this.validationMethods.get(key);
           if (
@@ -309,8 +280,6 @@ export class Cientista<TResult, TParams extends Array<any>> {
               testName: key,
               experimentName: this.experimentName,
               performance: time,
-              cyclomaticComplexity: complexity,
-              baseCyclomaticComplexity,
               basePerformance,
             })
           ) {
@@ -417,7 +386,7 @@ export class Cientista<TResult, TParams extends Array<any>> {
   }
 
   private log(message: string): void {
-    if (this.options.verbosity == Verbosity.Silent) return;
+    if (this.options.verbosity === Verbosity.Silent) return;
     this.options.logger!(message);
   }
 }
