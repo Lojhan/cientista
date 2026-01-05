@@ -1,3 +1,4 @@
+import { describe, it, assert } from "poku";
 import { waitFor } from "../helpers";
 import { Cientista } from "../lib/Cientista";
 
@@ -10,9 +11,10 @@ describe("Cientista Cleanup", () => {
 
   it("should call the cleanup method", async () => {
     const cientista = createCientista();
-    const cleanup = jest.fn();
+    let cleanupCallCount = 0;
+    const cleanup = () => cleanupCallCount++;
     cientista.withTest("test", (a: number, b: number) => a + b, cleanup);
     await cientista.run(1, 2);
-    await waitFor(() => expect(cleanup).toHaveBeenCalledTimes(1));
+    await waitFor(() => assert.strictEqual(cleanupCallCount, 1));
   });
 });

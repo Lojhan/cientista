@@ -1,3 +1,4 @@
+import { describe, it, assert } from "poku";
 import { waitFor } from "../helpers";
 import { Cientista } from "../lib/Cientista";
 import { Verbosity } from "../lib/Verbosity";
@@ -13,10 +14,13 @@ describe("Cientista Validation Method", () => {
 
   it("should call the validation method", async () => {
     const cientista = createCientista();
-    const validate = jest.fn();
-    const onError = jest.fn();
-    validate.mockReturnValue(false);
-    cientista.onError(onError);
+    let validateCallCount = 0;
+    let onErrorCallCount = 0;
+    const validate = () => {
+      validateCallCount++;
+      return false;
+    };
+    cientista.onError(() => onErrorCallCount++);
     cientista.withTest(
       "test",
       (a: number, b: number) => a + b,
@@ -25,8 +29,8 @@ describe("Cientista Validation Method", () => {
     );
     await cientista.run(1, 2);
     await waitFor(() => {
-      expect(validate).toHaveBeenCalledTimes(1);
-      expect(onError).toHaveBeenCalledTimes(1);
+      assert.strictEqual(validateCallCount, 1);
+      assert.strictEqual(onErrorCallCount, 1);
     });
   });
 });
