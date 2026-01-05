@@ -95,7 +95,11 @@ jobs:
           elif [[ "${{ github.event_name }}" == "pull_request" && "${{ github.head_ref }}" =~ ^release/ ]]; then
             VERSION=$(echo "${{ github.head_ref }}" | sed -E 's/^release\/(v)?([0-9]+\.[0-9]+\.[0-9]+).*$/\2/')
             IS_PRERELEASE="true"  # PRs create release candidates
-          # Check commit message for semver keywords
+          # For push events, use version from package.json (already updated in PR)
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            VERSION=$(node -p "require('./package.json').version")
+            echo "Using version from package.json: $VERSION"
+          # Check commit message for semver keywords (fallback)
           elif git log -1 --pretty=%B | grep -qi "major"; then
             TYPE="major"
           elif git log -1 --pretty=%B | grep -qi "minor"; then
@@ -173,8 +177,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ needs.detect-version.outputs.version }}
-          release_name: v${{ needs.detect-version.outputs.version }}
+          tag_name: ${{ needs.detect-version.outputs.version }}
+          release_name: ${{ needs.detect-version.outputs.version }}
           body: |
             🚧 **Release Candidate**
             
@@ -197,7 +201,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `🚀 Release candidate **v${{ needs.detect-version.outputs.version }}** has been created!\n\n` +
+              body: `🚀 Release candidate **${{ needs.detect-version.outputs.version }}** has been created!\n\n` +
                     `This version will be published as a stable release when this PR is merged to main.`
             })
 
@@ -250,7 +254,10 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          npm version ${{ needs.detect-version.outputs.version }} -m "chore(release): bump version to %s"
+          npm version ${{ needs.detect-version.outputs.version }} --no-git-tag-version -m "chore(release): bump version to %s"
+          git add package.json package-lock.json
+          git commit -m "chore(release): bump version to ${{ needs.detect-version.outputs.version }}"
+          git tag -a "${{ needs.detect-version.outputs.version }}" -m "Release ${{ needs.detect-version.outputs.version }}"
           git push
           git push --tags
 
@@ -259,7 +266,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git tag -a "v${{ needs.detect-version.outputs.version }}" -m "Release v${{ needs.detect-version.outputs.version }}"
+          git tag -a "${{ needs.detect-version.outputs.version }}" -m "Release ${{ needs.detect-version.outputs.version }}"
           git push --tags
 
       - name: Generate changelog
@@ -282,10 +289,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ needs.detect-version.outputs.version }}
-          release_name: v${{ needs.detect-version.outputs.version }}
+          tag_name: ${{ needs.detect-version.outputs.version }}
+          release_name: ${{ needs.detect-version.outputs.version }}
           body: |
-            ## 🎉 Release v${{ needs.detect-version.outputs.version }}
+            ## 🎉 Release ${{ needs.detect-version.outputs.version }}
             
             ### Changes
             ${{ steps.changelog.outputs.changelog }}
@@ -299,7 +306,7 @@ jobs:
 
       - name: Create summary
         run: |
-          echo "### 🎉 Release v${{ needs.detect-version.outputs.version }} Created!" >> $GITHUB_STEP_SUMMARY
+          echo "### 🎉 Release ${{ needs.detect-version.outputs.version }} Created!" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Version:** ${{ needs.detect-version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
           echo "**Type:** ${{ needs.detect-version.outputs.version-type }}" >> $GITHUB_STEP_SUMMARY
