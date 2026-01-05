@@ -1,7 +1,8 @@
 {
   "author": "lojhan",
   "dependencies": {
-    "poku": "^3.0.2"
+    "poku": "^3.0.2",
+    "tsx": "^4.21.0"
   },
   "description": "Cientista is a versatile library designed to facilitate the smooth update of critical software paths.",
   "devDependencies": {
@@ -23,7 +24,7 @@
     "scientist",
     "science"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "main": "build/index.js",
   "module": "build/index.js",
   "name": "cientista",
@@ -40,5 +41,5 @@
   },
   "type": "module",
   "types": "build/index.d.ts",
-  "version": "0.6.0"
+  "version": "0.7.0"
 }
