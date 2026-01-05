@@ -1,4 +1,4 @@
-export async function executeWithPerformance<T>(fn: Function) {
+export async function executeWithPerformance<T>(fn: () => Promise<T> | T) {
   const start = performance.now();
   const result = await fn();
   const end = performance.now();

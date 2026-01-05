@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ES2022",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "rootDirs": ["src", "test", "examples"],
     "outDir": "./build",
     "declaration": true,

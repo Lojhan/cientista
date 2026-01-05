@@ -1,1 +1,1 @@
-export { Cientista } from "./lib/Cientista";
+export { Cientista } from "./lib/Cientista.js";

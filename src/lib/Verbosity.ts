@@ -1,6 +1,6 @@
 export const Verbosity = {
   Silent: 0,
   Verbose: 1,
-};
+} as const;
 
-export type VerbosityType = keyof typeof Verbosity;
+export type Verbosity = (typeof Verbosity)[keyof typeof Verbosity];

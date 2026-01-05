@@ -1,4 +1,4 @@
-import { describe, it, assert } from "poku";
+import { assert, describe, it } from "poku";
 import { waitFor } from "./helpers";
 
 describe("waitFor", () => {
@@ -14,7 +14,7 @@ describe("waitFor", () => {
     try {
       await waitFor(condition, { timeout: 100 });
       assert.fail("Should have thrown");
-    } catch (error: any) {
+    } catch (error: unknown) {
       assert.ok(error);
     }
   });

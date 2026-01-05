@@ -1,5 +1,5 @@
-import { Verbosity } from "./Verbosity";
-import { executeWithPerformance } from "./performance";
+import { Verbosity, type Verbosity as VerbosityType } from "./Verbosity.js";
+import { executeWithPerformance } from "./performance.js";
 
 type SkipTestsArguments =
   | (() => boolean)
@@ -17,10 +17,10 @@ type ValidationMethodParams = {
 };
 
 type CientistaOptions<TResult> = {
-  verbosity?: number;
+  verbosity?: VerbosityType;
   logger?: (message: string) => void;
   performanceMeasurementFunction?: (
-    fn: Function,
+    fn: () => Promise<TResult> | TResult,
   ) => Promise<{ time: number; result: TResult }>;
   failOnDecreasedPerformance?: boolean;
   ingoreAllTests?: boolean;
