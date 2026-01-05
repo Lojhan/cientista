@@ -23,7 +23,7 @@
     "scientist",
     "science"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "main": "build/index.js",
   "module": "build/index.js",
   "name": "cientista",
@@ -40,5 +40,5 @@
   },
   "type": "module",
   "types": "build/index.d.ts",
-  "version": "0.6.0"
+  "version": "0.7.0"
 }
