@@ -1,7 +1,8 @@
 {
   "author": "lojhan",
   "dependencies": {
-    "poku": "^3.0.2"
+    "poku": "^3.0.2",
+    "tsx": "^4.21.0"
   },
   "description": "Cientista is a versatile library designed to facilitate the smooth update of critical software paths.",
   "devDependencies": {
