@@ -6,7 +6,7 @@
   },
   "description": "Cientista is a versatile library designed to facilitate the smooth update of critical software paths.",
   "devDependencies": {
-    "prettier": "3.7.4",
+    "prettier": "3.8.0",
     "typescript": "5.9.3"
   },
   "entrypoint": "./src/index.ts",
