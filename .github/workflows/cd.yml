@@ -1,0 +1,43 @@
+name: 'CD — Publish'
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    name: Release Please
+    steps:
+      - name: Actions - Checkout
+        uses: actions/checkout@v6
+
+      - name: Actions - Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          check-latest: true
+          node-version: lts/*
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Cache dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.npm
+          key: npm-linux-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-linux-
+
+      - name: Installing Dependencies
+        run: npm ci
+
+      - name: Building cientista
+        run: npm run build
+
+      - name: Publishing Package
+        run: npm publish --provenance --access public --workspaces --if-present
